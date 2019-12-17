@@ -3,9 +3,13 @@ package pl.szymson.klawiatura;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetManager;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.inputmethodservice.InputMethodService;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -16,7 +20,10 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputConnection;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
+
+import androidx.annotation.ColorInt;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -24,6 +31,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
 
 public class KlawiaturaService extends InputMethodService implements KeyboardView.OnKeyboardActionListener {
@@ -36,8 +44,23 @@ public class KlawiaturaService extends InputMethodService implements KeyboardVie
             // get the KeyboardView and add our Keyboard layout to it
             kv = (KeyboardView) getLayoutInflater().inflate(R.layout.keyboard_view, null);
             k = new Keyboard(this, R.xml.number_pad);
-            kv.setKeyboard(k);
+            //kv.setBackgroundColor(Color.GREEN);
+
+
             kv.setOnKeyboardActionListener(this);
+            kv.setKeyboard(k);
+
+            Context context = getApplicationContext();
+            AssetManager am = context.getAssets();
+            InputStream is = null;
+            try {
+                is = am.open("test/icpng.png");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            File file = new File("app/src/main/assets/test/icpng.png");
+            kv.setBackground(Drawable.createFromStream(is,"icpng.png"));
+
             return kv;
         }
 
@@ -47,6 +70,15 @@ public class KlawiaturaService extends InputMethodService implements KeyboardVie
             InputConnection ic = getCurrentInputConnection();
             if (ic == null) return;
             Context context = getApplicationContext();
+
+            //granie za kazdym razem
+            Uri sound = RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_NOTIFICATION);
+            MediaPlayer mp = MediaPlayer.create(context, sound);
+
+            AudioManager am = (AudioManager) getSystemService(AUDIO_SERVICE);
+            int volume_level= am.getStreamVolume(AudioManager.STREAM_SYSTEM);
+            if(volume_level>0) mp.start();
+
             switch (primaryCode) {
                 case Keyboard.KEYCODE_DELETE:
                     CharSequence selectedText = ic.getSelectedText(0);
@@ -72,9 +104,7 @@ public class KlawiaturaService extends InputMethodService implements KeyboardVie
                     String customText = "BlaBlaBla";
                     ic.commitText(customText,1);
                     break;
-                case -102:
-                    Uri sound = RingtoneManager.getActualDefaultRingtoneUri(context, RingtoneManager.TYPE_NOTIFICATION);
-                    MediaPlayer mp = MediaPlayer.create(context, sound);
+                case -102://bylo granie a zmienilo sie na granie za kazdym razem
                     mp.start();
                     break;
                 case -103: //Zad3 kamera
@@ -83,11 +113,12 @@ public class KlawiaturaService extends InputMethodService implements KeyboardVie
                     break;
                 case -104:
                     String pth = getApplicationContext().getFilesDir().getPath();
-                    String pthExt = Environment.getExternalStorageDirectory().toString();
+                   // String pthExt = Environment.getExternalStorageDirectory().toString();
 
                     try {
                         File root = new File(pth);
                         File gpxfile = new File(root, "samples.txt");
+                        System.out.println(gpxfile.getAbsolutePath());
                         FileWriter writer = new FileWriter(gpxfile);
                         writer.append("Tekst zapisany w pliku");
                         writer.flush();
@@ -179,6 +210,10 @@ public class KlawiaturaService extends InputMethodService implements KeyboardVie
                     }
                     customToast(context,wifiTxt1,Toast.LENGTH_SHORT);
                     break;
+                case -191: // Wybieramy klawiature
+                    InputMethodManager imeManager = (InputMethodManager) getApplicationContext().getSystemService(INPUT_METHOD_SERVICE);
+                    imeManager.showInputMethodPicker();
+                    break;
                 default:
                     char code = (char) primaryCode;
                     ic.commitText(String.valueOf(code), 1);
@@ -214,4 +249,5 @@ public class KlawiaturaService extends InputMethodService implements KeyboardVie
             Toast.makeText(ctx, txt, time).show();
             return;
         }
+
     }

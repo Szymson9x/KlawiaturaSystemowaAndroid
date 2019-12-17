@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Keyboard xmlns:android="http://schemas.android.com/apk/res/android"
-    android:keyWidth="50%p"
+    android:keyWidth="33%p"
     android:horizontalGap="5dp"
     android:verticalGap="5dp"
     android:keyHeight="60dp">
 
     <Row>
         <Key android:codes="-91" android:keyLabel="Switch to 1"/>
+        <Key android:codes="-191" android:keyLabel="Change keyboard"/>
     </Row>
     <Row>
         <Key android:codes="-107" android:keyLabel="7" android:keyEdgeFlags="left"/>
-        <Key android:codes="-108" android:keyLabel="8" android:keyEdgeFlags="right"/>
+        <Key android:codes="-108" android:keyLabel="8"/>
+        <Key android:codes="-109" android:keyLabel="9" android:keyEdgeFlags="right"/>
 
     </Row>
 
     <Row>
-        <Key android:codes="-109" android:keyLabel="9" android:keyEdgeFlags="left"/>
-        <Key android:codes="-110" android:keyLabel="10" android:keyEdgeFlags="right"/>
+        <Key android:codes="-110" android:keyLabel="10" android:keyEdgeFlags="left"/>
+        <Key android:codes="-111" android:keyLabel="11"/>
     </Row>
 
     <Row>

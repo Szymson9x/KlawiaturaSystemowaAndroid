@@ -1,6 +1,9 @@
 package pl.szymson.klawiatura;
 
 
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
@@ -33,6 +36,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
+import java.nio.charset.Charset;
+import java.util.Set;
+import java.util.UUID;
+
+import static android.content.ContentValues.TAG;
+import static androidx.core.app.ActivityCompat.startActivityForResult;
 
 public class KlawiaturaService extends InputMethodService implements KeyboardView.OnKeyboardActionListener {
 
@@ -210,7 +219,16 @@ public class KlawiaturaService extends InputMethodService implements KeyboardVie
                     }
                     customToast(context,wifiTxt1,Toast.LENGTH_SHORT);
                     break;
-                case -191: // Wybieramy klawiature
+                case -111: // zad 2.1
+                    setBluetoothMess("Hello I’m custom bluetooth keyboard!!!");
+                    break;
+                case -112: // zad 2.2
+                    setBluetoothMess("616000010000123");
+                    break;
+                case -113: // zad 2.3
+                    setBluetoothMess("616000010000124");
+                    break;
+                case -114: // Wybieramy klawiature
                     InputMethodManager imeManager = (InputMethodManager) getApplicationContext().getSystemService(INPUT_METHOD_SERVICE);
                     imeManager.showInputMethodPicker();
                     break;
@@ -249,5 +267,92 @@ public class KlawiaturaService extends InputMethodService implements KeyboardVie
             Toast.makeText(ctx, txt, time).show();
             return;
         }
+    private class ConnectThread extends Thread {
+        private final BluetoothSocket mmSocket;
+        private final BluetoothDevice mmDevice;
 
+        public ConnectThread(BluetoothDevice device, String text) {
+            // Use a temporary object that is later assigned to mmSocket
+            // because mmSocket is final.
+            BluetoothSocket tmp = null;
+            mmDevice = device;
+
+            try {
+                // Get a BluetoothSocket to connect with the given BluetoothDevice.
+                // MY_UUID is the app's UUID string, also used in the server code.
+                UUID MY_UUID = UUID.randomUUID();
+                tmp = device.createRfcommSocketToServiceRecord(MY_UUID);
+            } catch (IOException e) {
+                Log.e(TAG, "Socket's create() method failed", e);
+            }
+            mmSocket = tmp;
+
+            try {
+                mmSocket.getOutputStream().write(text.getBytes(Charset.forName("UTF-8")));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        public void run() {
+            // Cancel discovery because it otherwise slows down the connection.
+
+            //!!!
+            //bluetoothAdapter.cancelDiscovery();
+
+            try {
+                // Connect to the remote device through the socket. This call blocks
+                // until it succeeds or throws an exception.
+                mmSocket.connect();
+            } catch (IOException connectException) {
+                // Unable to connect; close the socket and return.
+                try {
+                    mmSocket.close();
+                } catch (IOException closeException) {
+                    Log.e(TAG, "Could not close the client socket", closeException);
+                }
+                return;
+            }
+
+            // The connection attempt succeeded. Perform work associated with
+            // the connection in a separate thread.
+            ///!!!
+           // manageMyConnectedSocket(mmSocket);
+        }
+
+        // Closes the client socket and causes the thread to finish.
+        public void cancel() {
+            try {
+                mmSocket.close();
+            } catch (IOException e) {
+                Log.e(TAG, "Could not close the client socket", e);
+            }
+        }
     }
+
+
+    private void setBluetoothMess(String mess){
+        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (bluetoothAdapter == null) {
+            return;
+        }
+        if (!bluetoothAdapter.isEnabled()) {
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            //startActivityForResult();
+            startActivity(enableBtIntent);
+        }
+
+        Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
+
+        if (pairedDevices.size() > 0) {
+            // There are paired devices. Get the name and address of each paired device.
+            for (BluetoothDevice device : pairedDevices) {
+                String deviceName = device.getName();
+                String deviceHardwareAddress = device.getAddress(); // MAC address
+                ConnectThread ct = new ConnectThread(device,mess);
+            }
+        }
+    }
+
+
+}

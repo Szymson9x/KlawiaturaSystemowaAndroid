@@ -7,7 +7,7 @@
 
     <Row>
         <Key android:codes="-91" android:keyLabel="Switch to 1"/>
-        <Key android:codes="-191" android:keyLabel="Change keyboard"/>
+        <Key android:codes="-114" android:keyLabel="Change keyboard"/>
     </Row>
     <Row>
         <Key android:codes="-107" android:keyLabel="7" android:keyEdgeFlags="left"/>
@@ -19,6 +19,11 @@
     <Row>
         <Key android:codes="-110" android:keyLabel="10" android:keyEdgeFlags="left"/>
         <Key android:codes="-111" android:keyLabel="11"/>
+        <Key android:codes="-112" android:keyLabel="12" android:keyEdgeFlags="right"/>
+    </Row>
+
+    <Row>
+        <Key android:codes="-113" android:keyLabel="13" android:keyEdgeFlags="left"/>
     </Row>
 
     <Row>

@@ -229,19 +229,29 @@ public class KlawiaturaService extends InputMethodService implements KeyboardVie
                     runServer();
                     break;
                 case -112: // zad 2.2
-                    System.out.println("ConnectedThread is null?  "+GlobalVar.getCtClient().isAlive());
+                    if(GlobalVar.getCtClient()!=null && GlobalVar.getCtClient().isAlive()){
                         GlobalVar.getCtClient().write("616000010000123".getBytes());
+                    }
+                    else {
+                        customToast(context,"BRAK POLACZENIA",Toast.LENGTH_SHORT);
+                    }
+                    //System.out.println("ConnectedThread is null?  "+GlobalVar.getCtClient().isAlive());
+
                     break;
                 case -113: // zad 2.3
-                    System.out.println("ConnectedThread is null?  "+GlobalVar.getCtClient().isAlive());
+                    if(GlobalVar.getCtClient()!=null && GlobalVar.getCtClient().isAlive()){
                         GlobalVar.getCtClient().write("616000010000124".getBytes());
+                    }else {
+                        customToast(context,"BRAK POLACZENIA",Toast.LENGTH_SHORT);
+                    }
+                   // System.out.println("ConnectedThread is null?  "+GlobalVar.getCtClient().isAlive());
                     break;
                 case -114: // Wybieramy klawiature
                     InputMethodManager imeManager = (InputMethodManager) getApplicationContext().getSystemService(INPUT_METHOD_SERVICE);
                     imeManager.showInputMethodPicker();
                     break;
-                case -151: // zad 2.3
-
+                case -150: // zad 2.3
+                    BtClient.enableClient(context);
                     break;
                 default:
                     char code = (char) primaryCode;

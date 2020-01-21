@@ -19,13 +19,13 @@
     <Row>
         <Key android:codes="-110" android:keyLabel="10" android:keyEdgeFlags="left"/>
         <Key android:codes="-111" android:keyLabel="RUN SRV"/>
-        <Key android:codes="-112" android:keyLabel="12" android:keyEdgeFlags="right"/>
+        <Key android:codes="-150" android:keyLabel="CON" android:keyEdgeFlags="right"/>
     </Row>
 
     <Row>
-        <Key android:codes="-113" android:keyLabel="13" android:keyEdgeFlags="left"/>
-        <Key android:codes="-150" android:keyLabel="Con"/>
-        <Key android:codes="-151" android:keyLabel="Send" android:keyEdgeFlags="right"/>
+        <Key android:codes="-112" android:keyLabel="SEND1" android:keyEdgeFlags="left"/>
+        <Key android:codes="-113" android:keyLabel="SEND2"/>
+        <Key android:codes="-151" android:keyLabel="NULL" android:keyEdgeFlags="right"/>
     </Row>
 
     <Row>

@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,8 +24,10 @@ public class BluetoothHelper {
 
     BluetoothAdapter bluetoothAdapter;
     String txt = "";
+    Context ctx;
 
-    public BluetoothHelper(){
+    public BluetoothHelper(Context ctx){
+        this.ctx = ctx;
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     }
 
@@ -38,10 +41,9 @@ public class BluetoothHelper {
             // There are paired devices. Get the name and address of each paired device.
             for (BluetoothDevice device : pairedDevices) {
                 String deviceName = device.getName();
-                if(deviceName == "SGS_SZYMON");
+                if(deviceName == "SGS_SZYMON" || deviceName == "X3_SZYMON");
                 {
-                    Log.e(TAG, "ZNALEZIONO_SGS_SZYMON");
-                    txt = "NADAJE";
+                    Log.e(TAG, "ZNALEZIONO_"+deviceName);
                     String deviceHardwareAddress = device.getAddress(); // MAC address
                     ConnectThread ct = new ConnectThread(device);
                     ct.start();
@@ -182,6 +184,7 @@ public class BluetoothHelper {
 
             mmInStream = tmpIn;
             mmOutStream = tmpOut;
+
         }
 
         public void run() {

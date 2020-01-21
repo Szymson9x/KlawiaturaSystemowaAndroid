@@ -7,5 +7,4 @@
     android:keyPreviewLayout="@layout/key_preview"
     android:keyBackground="@drawable/cust_key"
     android:layout_alignParentBottom="true">
-
 </android.inputmethodservice.KeyboardView>

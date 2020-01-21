@@ -3,6 +3,7 @@
     package="pl.szymson.klawiatura">
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
     <uses-permission android:name="android.permission.CAMERA"> </uses-permission>
     <!--permission ge enable and disable WIFI in android-->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>

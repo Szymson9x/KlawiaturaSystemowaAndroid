@@ -8,8 +8,8 @@ import android.content.IntentFilter;
 
 public class BtClient {
 
-    public static void enableClient(Context ctx){
-        BluetoothHelper bh = new BluetoothHelper(ctx);
+    public static void enableClient(){
+        BluetoothHelper bh = new BluetoothHelper();
         bh.polacz();
     }
 

@@ -10,15 +10,15 @@
     </Row>
 
     <Row>
-        <Key android:codes="-101" android:keyLabel="1" android:keyEdgeFlags="left"/>
-        <Key android:codes="-102" android:keyLabel="2"/>
-        <Key android:codes="-103" android:keyLabel="3" android:keyEdgeFlags="right"/>
+        <Key android:codes="-101" android:keyLabel="In txt" android:keyEdgeFlags="left"/>
+        <Key android:codes="-102" android:keyLabel="SOUND"/>
+        <Key android:codes="-103" android:keyLabel="CAM" android:keyEdgeFlags="right"/>
     </Row>
 
     <Row>
-        <Key android:codes="-104" android:keyLabel="4" android:keyEdgeFlags="left"/>
-        <Key android:codes="-105" android:keyLabel="5"/>
-        <Key android:codes="-106" android:keyLabel="6" android:keyEdgeFlags="right"/>
+        <Key android:codes="-104" android:keyLabel="WRITE file" android:keyEdgeFlags="left"/>
+        <Key android:codes="-105" android:keyLabel="TOAST"/>
+        <Key android:codes="-106" android:keyLabel="READ file" android:keyEdgeFlags="right"/>
     </Row>
 
     <Row>

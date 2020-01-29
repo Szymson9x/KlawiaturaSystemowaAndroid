@@ -23,11 +23,8 @@ import static android.content.ContentValues.TAG;
 public class BluetoothHelper {
 
     BluetoothAdapter bluetoothAdapter;
-    String txt = "";
-    Context ctx;
 
-    public BluetoothHelper(Context ctx){
-        this.ctx = ctx;
+    public BluetoothHelper(){
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     }
 
@@ -56,8 +53,6 @@ public class BluetoothHelper {
         private final BluetoothSocket mmSocket;
         private final BluetoothDevice mmDevice;
         private ConnectedThread mConnectedThread;
-
-
 
         public ConnectThread(BluetoothDevice device) {
 
@@ -164,7 +159,6 @@ public class BluetoothHelper {
         private byte[] mmBuffer; // mmBuffer store for the stream
 
         public ConnectedThread(BluetoothSocket socket) {
-            Log.e(TAG, "POLACZONO");
             mmSocket = socket;
             InputStream tmpIn = null;
             OutputStream tmpOut = null;
@@ -188,7 +182,6 @@ public class BluetoothHelper {
         }
 
         public void run() {
-            Log.e(TAG, "SPRAWZDAM");
             mmBuffer = new byte[1024];
             int numBytes; // bytes returned from read()
 

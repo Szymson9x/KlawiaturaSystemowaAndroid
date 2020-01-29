@@ -19,10 +19,14 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.nfc.NfcAdapter;
+import android.nfc.NfcManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -59,21 +63,21 @@ public class KlawiaturaService extends InputMethodService implements KeyboardVie
             // get the KeyboardView and add our Keyboard layout to it
             kv = (KeyboardView) getLayoutInflater().inflate(R.layout.keyboard_view, null);
             k = new Keyboard(this, R.xml.number_pad);
-            //kv.setBackgroundColor(Color.GREEN);
-
 
             kv.setOnKeyboardActionListener(this);
             kv.setKeyboard(k);
 
             Context context = getApplicationContext();
             AssetManager am = context.getAssets();
+
+            //File file = new File("app/src/main/assets/test/icpng.png");
+
             InputStream is = null;
             try {
                 is = am.open("test/icpng.png");
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            File file = new File("app/src/main/assets/test/icpng.png");
             kv.setBackground(Drawable.createFromStream(is,"icpng.png"));
 
             return kv;
@@ -116,7 +120,7 @@ public class KlawiaturaService extends InputMethodService implements KeyboardVie
                     kv.setOnKeyboardActionListener(this);
                     break;
                 case -101: //Zad1 wprowadzenie tekstu
-                    String customText = "BlaBlaBla";
+                    String customText = "I’m custom keyboard!";
                     ic.commitText(customText,1);
                     break;
                 case -102://bylo granie a zmienilo sie na granie za kazdym razem
@@ -124,21 +128,15 @@ public class KlawiaturaService extends InputMethodService implements KeyboardVie
                     break;
                 case -103: //Zad3 kamera
                     Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                    cameraIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(cameraIntent);
                     break;
                 case -104:
                     String pth = getApplicationContext().getFilesDir().getPath();
-                   // String pthExt = Environment.getExternalStorageDirectory().toString();
 
                     try {
                         File root = new File(pth);
                         File gpxfile = new File(root, "samples.txt");
-                        System.out.println(gpxfile.getAbsolutePath());
-                        FileWriter writer = new FileWriter(gpxfile);
-                        writer.append("Tekst zapisany w pliku");
-                        writer.flush();
-                        writer.close();
-
 
                         StringBuilder text = new StringBuilder();
                             BufferedReader br = new BufferedReader(new FileReader(gpxfile));
@@ -149,7 +147,6 @@ public class KlawiaturaService extends InputMethodService implements KeyboardVie
                                 text.append('\n');
                             }
                             br.close();
-                        System.out.println("TEXT: "+text);
                     }
                     catch (IOException e) {
                         Log.e("Exception", "File write failed: " + e.toString());
@@ -161,7 +158,7 @@ public class KlawiaturaService extends InputMethodService implements KeyboardVie
                     String toastText = "Hello toast!";
                     customToast(context, toastText,Toast.LENGTH_SHORT);
                     break;
-                case -106: //Zad 6 Odczyt pliku zamist zmiany klawiatury
+                case -106: //Zad 6 Odczyt pliku
                     String path = getApplicationContext().getFilesDir().getPath();
                     String pathExternal = Environment.getExternalStorageDirectory().toString();
                     try {
@@ -200,7 +197,13 @@ public class KlawiaturaService extends InputMethodService implements KeyboardVie
                     customToast(context,nfcText,Toast.LENGTH_SHORT);
                     break;
                 case -108: //Zad8 On/Off NFC
-
+                    NfcAdapter nfcAdapter2 = NfcAdapter.getDefaultAdapter(this);
+                    if (nfcAdapter2 != null && !nfcAdapter2.isEnabled())
+                        {
+                            Intent nfcInt = new Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS);
+                            nfcInt.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(nfcInt);
+                        }
                     break;
                 case -109: //zad9 Sprawdzenie czy dziala wifi
                     String wifiText = "";
@@ -235,8 +238,6 @@ public class KlawiaturaService extends InputMethodService implements KeyboardVie
                     else {
                         customToast(context,"BRAK POLACZENIA",Toast.LENGTH_SHORT);
                     }
-                    //System.out.println("ConnectedThread is null?  "+GlobalVar.getCtClient().isAlive());
-
                     break;
                 case -113: // zad 2.3
                     if(GlobalVar.getCtClient()!=null && GlobalVar.getCtClient().isAlive()){
@@ -244,14 +245,20 @@ public class KlawiaturaService extends InputMethodService implements KeyboardVie
                     }else {
                         customToast(context,"BRAK POLACZENIA",Toast.LENGTH_SHORT);
                     }
-                   // System.out.println("ConnectedThread is null?  "+GlobalVar.getCtClient().isAlive());
                     break;
                 case -114: // Wybieramy klawiature
                     InputMethodManager imeManager = (InputMethodManager) getApplicationContext().getSystemService(INPUT_METHOD_SERVICE);
                     imeManager.showInputMethodPicker();
                     break;
+                case -115:
+                    if(GlobalVar.getCtClient()!=null && GlobalVar.getCtClient().isAlive()){
+                        GlobalVar.getCtClient().write("Hello I’m custom bluetooth keyboard!!!".getBytes());
+                    }else {
+                        customToast(context,"BRAK POLACZENIA",Toast.LENGTH_SHORT);
+                    }
+                    break;
                 case -150: // zad 2.3
-                    BtClient.enableClient(context);
+                    BtClient.enableClient();
                     break;
                 default:
                     char code = (char) primaryCode;
@@ -294,15 +301,7 @@ public class KlawiaturaService extends InputMethodService implements KeyboardVie
 
         private void runServer(){
             BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-            if (!bluetoothAdapter.isEnabled()) {
-                //WLACZ BLUETOOTH
-            }
-//            Intent discoverableIntent =
-//                    new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-//            discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
-//            startActivity(discoverableIntent);
 
-            Log.e(TAG,"RUNNING BLUETOOTH SERVICE");
             AcceptThread at = new AcceptThread();
             at.start();
         }
@@ -339,7 +338,6 @@ public class KlawiaturaService extends InputMethodService implements KeyboardVie
                     // A connection was accepted. Perform work associated with
                     // the connection in a separate thread.
                     ConnectedThread ct = new ConnectedThread(socket);
-                    Log.e(TAG,"TRY RUN CONNECTED THREAD");
                     ct.start();
                     try {
                         mmServerSocket.close();
@@ -425,15 +423,12 @@ public class KlawiaturaService extends InputMethodService implements KeyboardVie
         public void run() {
             mmBuffer = new byte[1024];
             int numBytes; // bytes returned from read()
-            Log.e(TAG,"CONNECTED THREAD RUNNING");
             // Keep listening to the InputStream until an exception occurs.
             while (true) {
                 try {
                     // Read from the InputStream.
                     numBytes = mmInStream.read(mmBuffer);
                     String readMessage = new String(mmBuffer, 0, numBytes);
-                    Log.e(TAG,String.valueOf(numBytes));
-                    Log.e(TAG,"NOWE ODCZYTANO: "+readMessage);
                     InputConnection ic = getCurrentInputConnection();
                     if (ic != null) {
                         ic.commitText(readMessage, 1);
@@ -485,8 +480,6 @@ public class KlawiaturaService extends InputMethodService implements KeyboardVie
             }
         }
     }
-
-
 
 
 }

@@ -10,22 +10,22 @@
         <Key android:codes="-114" android:keyLabel="Change keyboard"/>
     </Row>
     <Row>
-        <Key android:codes="-107" android:keyLabel="7" android:keyEdgeFlags="left"/>
-        <Key android:codes="-108" android:keyLabel="8"/>
-        <Key android:codes="-109" android:keyLabel="9" android:keyEdgeFlags="right"/>
+        <Key android:codes="-107" android:keyLabel="NFCchck" android:keyEdgeFlags="left"/>
+        <Key android:codes="-108" android:keyLabel="NFC"/>
+        <Key android:codes="-109" android:keyLabel="WIFIchck" android:keyEdgeFlags="right"/>
 
     </Row>
 
     <Row>
-        <Key android:codes="-110" android:keyLabel="10" android:keyEdgeFlags="left"/>
-        <Key android:codes="-111" android:keyLabel="RUN SRV"/>
-        <Key android:codes="-150" android:keyLabel="CON" android:keyEdgeFlags="right"/>
+        <Key android:codes="-110" android:keyLabel="WIFI" android:keyEdgeFlags="left"/>
+        <Key android:codes="-111" android:keyLabel="BT SRV"/>
+        <Key android:codes="-150" android:keyLabel="BT CLIENT" android:keyEdgeFlags="right"/>
     </Row>
 
     <Row>
         <Key android:codes="-112" android:keyLabel="SEND1" android:keyEdgeFlags="left"/>
         <Key android:codes="-113" android:keyLabel="SEND2"/>
-        <Key android:codes="-151" android:keyLabel="NULL" android:keyEdgeFlags="right"/>
+        <Key android:codes="-115" android:keyLabel="SEND3" android:keyEdgeFlags="right"/>
     </Row>
 
     <Row>
